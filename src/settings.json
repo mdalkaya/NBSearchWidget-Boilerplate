@@ -1,8 +1,8 @@
 {
     "fetch": {
-        "url": "https://demo.medox.scisys.de:8443/dira6/auth/v10/login",
-        "username": "annova",
-        "password": "Medox124"
+        "url1": "https://itunes.apple.com/search?term=",
+        "url2": "&entity=musicVideo"
+      
        
     }
 }

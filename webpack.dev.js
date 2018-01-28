@@ -8,12 +8,18 @@ var BundleAnalyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var nodeExternals = require('webpack-node-externals');
 var isProduction = process.env.NODE_ENV === 'production';
 var isDevelopment = process.env.NODE_ENV === 'development';
+var AppSettings = require('./src/settings.json'); 
 
 const merge = require('webpack-merge');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common.js');
 
 
+
+
+	
+
+	var loginURL = AppSettings.fetch.url;
 
 module.exports = merge(common, {
 
@@ -26,11 +32,10 @@ module.exports = merge(common, {
 
   entry: {
   
-    'app': [
-      'babel-polyfill',
-      'react-hot-loader/patch',
-      './src/index'
-      
+    'content': [
+              'babel-polyfill',
+              'react-hot-loader/patch',
+              './src/index.js'
     ]
    
   },
@@ -97,10 +102,17 @@ module.exports = merge(common, {
  
   plugins: [
    
-		new HtmlWebpackPlugin({  // Also generate a test.html
+/*		new HtmlWebpackPlugin({  // Also generate a test.html
       filename: 'index.html',
       template: './index.dev.html'
-    }),
+    }),*/
+
+        new HtmlWebpackPlugin({
+    //      inject: false,
+      
+          filename: 'index.html',
+          template: './content.dev.html'
+        }),
     new CopyWebpackPlugin([
           
       // Copy OMWebPluginLib / Client-side SDK libs contents to {output}/
@@ -117,16 +129,17 @@ module.exports = merge(common, {
   
   
   devServer: {
+    disableHostCheck: true,
+    headers: {
+      "Access-Control-Allow-Origin": "*"
+    
+    },
     host: "0.0.0.0",
-    port: 3000,
+    port: 4000,
     hot: true,
-    inline: true
+    inline: true,
 
-  /* proxy: {
-            "**": { // proxy all
-                target: "http://localhost:8000", // our back-end api
-                secure: false
-            }
-   }*/
+
+   
   }
 })

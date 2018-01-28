@@ -33,7 +33,7 @@ export class CardsContextMenu extends React.Component {
     var builder = WpLib.OMPlugin.SamePageBuilder.create();
     var config = builder.getPluginConfig();
     var plugin = WpLib.OMPlugin.createPlugin(builder);
-   
+    console.log(config.prop1);
 
     var templateId = 4104;
     var folderLoId = 4096;

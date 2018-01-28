@@ -1,12 +1,9 @@
 import React from "react";
 import { execute_fetch } from "./fetch.js";
-
 import { CardExpandable } from "./CardExpandable.js";
 import { render } from "react-dom";
 import _ from "lodash";
 import { AppContainer } from 'react-hot-loader'
-
-
 
 import {
 	Grid,
@@ -43,6 +40,9 @@ import {
 	Responsive
 } from "semantic-ui-react";
 
+
+
+
 class WidgetWithCards extends React.Component {
 	constructor(props) {
 		super(props);
@@ -54,15 +54,33 @@ class WidgetWithCards extends React.Component {
 		this.handleSearchSideBar = this.handleSearchSideBar.bind(this);
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 
+		var WpLib = OMWebPluginLib;
+		var builder = WpLib.OMPlugin.SamePageBuilder.create();
+		var config = builder.getPluginConfig();
+		var plugin = WpLib.OMPlugin.createPlugin(builder);
+		try {
+			var param1 = config.prop1
+		}
+		catch(e) {
+			
+		}
+		
+	
+		//if content-plugin started stand-alone - without a config plugin, iTunes-API requires at least a search parameter
+		if (param1 == null){
+			param1 = "Wildecker" // as punishment, for not using a config page !!! 
+		}
+
 		this.state = {
 			page_to_fetch: 0,
 			loadingresults: false,
+			resultcolor: "grey",
 			searchSideBarVisible: false,
 			keepOpened: false,
 			filtersHaveChanged: false,
 			filterButtonColor: null,
 			keepOpened: false,
-			query: "",
+			query: param1,
 			resultCount: "No search started",
 			articles: {
 				status: "ok",
@@ -74,10 +92,12 @@ class WidgetWithCards extends React.Component {
 			newCards: <div />
 		};
 	}
+	
 
 	componentDidMount() {
 		this.handleRefresh();
 	}
+
 	handleRefresh(e) {
 		this.setState({ page_to_fetch: ++this.state.page_to_fetch });
 
@@ -97,12 +117,23 @@ class WidgetWithCards extends React.Component {
 			)
 		}));
 
-		execute_fetch(this.state.query, this.state.page_to_fetch).then(
+		execute_fetch(this.state.query, this.state.page_to_fetch ).then(
 			function(data) {
-			
+
+				var resultCount = data.resultCount;
+				if (resultCount == 0) {
+					this.setState({
+						resultcolor: "red",
+						resultCount: 0 + " results (Please enter some search paramters)"
+					});
+				} 
+				else{
+				
 				this.setState({
-					resultCount: data.resultCount + " result(s...)"
+					resultcolor: "grey",
+					resultCount: data.resultCount + " results"
 				});
+				}
 
 				var previousCard = this.state.allCards;
 
@@ -319,13 +350,13 @@ class WidgetWithCards extends React.Component {
 							/>
 						}
 						placeholder="Search"
-						defaultValue=""
+						defaultValue={this.state.query}
 						fluid
 					/>
 				</div>
 
 				<Divider horizontal fitted>
-					<Label size="small" color="grey">
+					<Label size="small" color={this.state.resultcolor}>
 						{this.state.resultCount}
 					</Label>
 				</Divider>

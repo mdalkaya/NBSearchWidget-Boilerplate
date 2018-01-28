@@ -1,6 +1,0 @@
-{
-    "auth": {
-        "username": "mike",
-        "password": "mysecret"
-    }
-}

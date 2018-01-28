@@ -44,11 +44,11 @@ module.exports = merge(common, {
     'app': [
  //     'babel-polyfill',
   //    'react-hot-loader/patch',
-      './src/index'
-      
-     
+  //'./src/content/index',
+  './src/index'
+  
     ]
-   
+    
   },
 
   output: {
@@ -127,10 +127,13 @@ module.exports = merge(common, {
              sourceMap: true
            }),
    */
-		new HtmlWebpackPlugin({  // Also generate a test.html
-      filename: 'index.html',
-      template: './index.prod.html'
-    }),
+
+      new HtmlWebpackPlugin({
+  //      inject: false,
+        chunks: ['app'],
+        filename: 'index.html',
+        template: './content.dev.html'
+      }),
 /*    new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor-bundle1',
       chunks: ['bundle1'],
